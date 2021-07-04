@@ -1,7 +1,8 @@
 import pprint
 import wci
+from credentials import email_address, password
 
-w = wci.WeConnectId('email address', 'password')
+w = wci.WeConnectId(email_address, password)
 
 vehicles = w.get('/vehicles')
 

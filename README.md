@@ -3,4 +3,6 @@ This is a Python wrapper around the API used by We Connect ID, used in Volkwagen
 
 Look in `example.py` or `example-with-cache.py` to see how `wci.py` is used. The latter shows how you can use the API without explicitly signing in every single time, by saving a previous session in a text/cache file.
 
+To run the examples, copy `credentials.example.py` to a new file called `credentials.py` and fill in the credentials that you use when signing in to the app.
+
 There is unfortunately no reference of the endpoints and/or HTTP methods, but what's provided in the examples should help you to at least retrieve some data from your Volkswagen ID.4 car.

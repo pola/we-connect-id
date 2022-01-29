@@ -1,3 +1,4 @@
+import json
 import random
 import re
 import requests
@@ -19,7 +20,7 @@ class WeConnectId:
         self._session = requests.session()
 
         self._session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
         })
 
     def _sign_in(self, force=False):
@@ -43,22 +44,22 @@ class WeConnectId:
                 data=post_data
             )
 
+            some_data = json.loads(re.search('templateModel: ({.*}),', r.text).group(1))
+
             # Enter password
             post_data = {
-                '_csrf': re.search('name="_csrf" value="([^"]+)"', r.text).group(1),
-                'relayState': re.search('name="relayState" value="([^"]+)"', r.text).group(1),
-                'hmac': re.search('name="hmac" value="([^"]+)"', r.text).group(1),
+                '_csrf': re.search('csrf_token: \'([^\']+)\'', r.text).group(1),
+                'relayState': some_data['relayState'],
+                'hmac': some_data['hmac'],
                 'email': self._email_address,
                 'password': self._password,
             }
-
-            uuid = re.search('action="/signin-service/v1/([^@]+)@apps_vw-dilab_com/login/authenticate"', r.text).group(1)
 
             access_token = None
 
             try:
                 r = self._session.post(
-                    'https://identity.vwgroup.io/signin-service/v1/' + uuid + '@apps_vw-dilab_com/login/authenticate',
+                    'https://identity.vwgroup.io/signin-service/v1/' + some_data['clientLegalEntityModel']['clientId'] + '/login/authenticate',
                     data=post_data
                 )
 

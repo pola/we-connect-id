@@ -80,6 +80,6 @@ class WeConnectId:
         if r.status_code == 401:
             self._sign_in(True)
 
-        r = self._session.get(BASE_URL + endpoint)
+            r = self._session.get(BASE_URL + endpoint)
 
         return r.json()

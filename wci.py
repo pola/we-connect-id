@@ -4,8 +4,9 @@ import re
 import requests
 import string
 
-BASE_URL = 'https://mobileapi.apps.emea.vwapps.io'
-
+#BASE_URL = 'https://mobileapi.apps.emea.vwapps.io'
+BASE_URL = 'https://emea.bff.cariad.digital/vehicle/v1'
+LOGIN_URL= 'https://emea.bff.cariad.digital/user-login/v1'
 
 class WeConnectId:
     def __init__(self, email_address, password, access_token=None):
@@ -27,7 +28,8 @@ class WeConnectId:
         if self._access_token is None or force:
             nonce = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=16))
 
-            r = self._session.get('https://login.apps.emea.vwapps.io/authorize?nonce=' + nonce + '&redirect_uri=weconnect://authenticated')
+            #r = self._session.get('https://login.apps.emea.vwapps.io/authorize?nonce=' + nonce + '&redirect_uri=weconnect://authenticated')
+            r = self._session.get(LOGIN_URL + '/authorize?nonce=' + nonce + '&redirect_uri=weconnect://authenticated')
 
             # Enter e-mail address
             post_data = {

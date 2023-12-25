@@ -12,4 +12,4 @@ pprint.pprint(vehicles)
 print('\n---\n\n')
 
 print('specific vehicle:')
-pprint.pprint(w.get('/vehicles/' + vehicles['data'][0]['vin'] + '/selectivestatus?jobs=all'))
+pprint.pprint(w.get('/vehicles/' + vehicles['data'][0]['vin'] + '/selectivestatus?jobs=access,charging,climatisation,climatisationTimers,fuelStatus,userCapabilities,vehicleLights,vehicleHealthInspection,oilLevel,measurements'))

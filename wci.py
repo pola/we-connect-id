@@ -59,8 +59,6 @@ class WeConnectId:
                 'password': self._password,
             }
 
-            access_token = None
-
             try:
                 r = self._session.post(
                     'https://identity.vwgroup.io/signin-service/v1/' + some_data['clientLegalEntityModel']['clientId'] + '/login/authenticate',

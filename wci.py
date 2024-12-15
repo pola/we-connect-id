@@ -65,6 +65,24 @@ class WeConnectId:
                     data=post_data
                 )
 
+                if 'Confirm Terms of Use' in r.text:
+                    some_data = json.loads(re.search('templateModel: (.*),', r.text).group(1))
+
+                    r = self._session.post('https://identity.vwgroup.io/signin-service/v1/' + some_data['clientLegalEntityModel']['clientId'] + '/terms-and-conditions',
+                    data={
+                        'countryOfResidence': 'SE',
+                        'legalDocuments[0].name': 'dataPrivacy',
+                        'legalDocuments[0].language': 'sv',
+                        'legalDocuments[0].version': '2.0',
+                        'legalDocuments[0].updated': 'yes',
+                        'legalDocuments[0].countryCode': 'se',
+                        'legalDocuments[0].skippable': 'no',
+                        'legalDocuments[0].declinable': 'no',
+                        '_csrf': re.search('csrf_token: \'([^\']+)\'', r.text).group(1),
+                        'relayState': some_data['relayState'],
+                        'hmac': some_data['hmac'],
+                    })
+
             except requests.exceptions.InvalidSchema as e:
                 # We expect a redirect to 'weconnect://authenticated', which requests doesn't understand
                 self._access_token = re.search('access_token=([^&$]+)', str(e)).group(1)

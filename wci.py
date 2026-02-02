@@ -33,35 +33,18 @@ class WeConnectId:
         if self._access_token is None or force:
             r = self._session.get(generate_url())
 
+            state = re.search('<input type="hidden" name="state" value="([^"]+)">', r.text).group(1)
+
             # Enter e-mail address
             post_data = {
-                '_csrf': re.search('name="_csrf" value="([^"]+)"', r.text).group(1),
-                'relayState': re.search('name="relayState" value="([^"]+)"', r.text).group(1),
-                'hmac': re.search('name="hmac" value="([^"]+)"', r.text).group(1),
-                'email': self._email_address,
-            }
-
-            uuid = re.search('action="/signin-service/v1/([^@]+)@apps_vw-dilab_com/login/identifier"', r.text).group(1)
-
-            r = self._session.post(
-                'https://identity.vwgroup.io/signin-service/v1/' + uuid + '@apps_vw-dilab_com/login/identifier',
-                data=post_data
-            )
-
-            some_data = json.loads(re.search('templateModel: ({.*}),', r.text).group(1))
-
-            # Enter password
-            post_data = {
-                '_csrf': re.search('csrf_token: \'([^\']+)\'', r.text).group(1),
-                'relayState': some_data['relayState'],
-                'hmac': some_data['hmac'],
-                'email': self._email_address,
+                'state': state,
+                'username': self._email_address,
                 'password': self._password,
             }
 
             try:
                 r = self._session.post(
-                    'https://identity.vwgroup.io/signin-service/v1/' + some_data['clientLegalEntityModel']['clientId'] + '/login/authenticate',
+                    'https://identity.vwgroup.io/u/login?state=' + state,
                     data=post_data
                 )
 
